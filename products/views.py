@@ -5,8 +5,8 @@ from .models import Product
 
 
 def product_list(request):
-    query = request.GET.get("q", "")  # Obtém o valor do input de busca
-    products = Product.objects.all()
+    query = request.GET.get("q", "")
+    products = Product.objects.select_related("specification").all()
 
     if query:
         products = products.filter(
