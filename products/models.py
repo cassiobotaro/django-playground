@@ -1,6 +1,14 @@
 from django.db import models
 
 
+class Category(models.Model):
+    name = models.CharField(max_length=100, verbose_name="Nome da Categoria")
+    description = models.TextField(blank=True, verbose_name="Descrição")
+
+    def __str__(self):
+        return self.name
+
+
 class Product(models.Model):
     name = models.CharField(max_length=100, verbose_name="Nome do Produto")
     sku = models.CharField(max_length=20, unique=True, verbose_name="Código SKU")
@@ -34,3 +42,28 @@ class ProductSpecification(models.Model):
 
     def __str__(self):
         return f"Especificações de {self.product.name}"
+
+
+class ProductDetail(models.Model):
+    product = models.OneToOneField(
+        Product,
+        on_delete=models.CASCADE,
+        related_name="detail",
+        verbose_name="Produto",
+    )
+    category = models.ForeignKey(
+        Category,
+        on_delete=models.PROTECT,
+        related_name="category",
+        verbose_name="Categoria",
+    )
+    manufacturer = models.CharField(max_length=100, verbose_name="Fabricante")
+    model_number = models.CharField(
+        max_length=50, blank=True, verbose_name="Número do Modelo"
+    )
+    release_date = models.DateField(
+        blank=True, null=True, verbose_name="Data de Lançamento"
+    )
+
+    def __str__(self):
+        return f"Detalhes de {self.product.name}"
