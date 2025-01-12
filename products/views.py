@@ -1,8 +1,11 @@
+import csv
+
+from django.contrib import messages
 from django.contrib.auth.decorators import user_passes_test
 from django.db.models import Q
-from django.shortcuts import get_object_or_404, render
+from django.shortcuts import get_object_or_404, redirect, render
 
-from .models import Product
+from .models import Category, Product, ProductDetail
 
 
 def is_in_group(group_name):
@@ -36,3 +39,54 @@ def product_detail(request, pk):
         pk=pk,
     )
     return render(request, "products/product_detail.html", {"product": product})
+
+
+def upload_csv(request):
+    if request.method == "POST" and request.FILES["csv_file"]:
+        csv_file = request.FILES["csv_file"]
+
+        # Verificar se o arquivo é CSV
+        if not csv_file.name.endswith(".csv"):
+            messages.error(request, "Por favor, envie um arquivo CSV.")
+            return redirect("upload_csv")
+
+        # Processar o arquivo CSV
+        decoded_file = csv_file.read().decode("utf-8").splitlines()
+        reader = csv.reader(decoded_file)
+        next(reader)  # Ignorar o cabeçalho
+
+        for row in reader:
+            sku = row[0].strip()
+            category_name = row[1].strip()
+
+            try:
+                product = Product.objects.get(sku=sku)
+            except Product.DoesNotExist:
+                messages.error(request, f"Produto com SKU {sku} não encontrado.")
+                continue  # Ignora a linha e continua para o próximo produto
+
+            try:
+                category = Category.objects.get(name=category_name)
+            except Category.DoesNotExist:
+                messages.error(request, f"Categoria '{category_name}' não encontrada.")
+                continue  # Ignora a linha e continua para o próximo produto
+
+            _, created = ProductDetail.objects.update_or_create(
+                product=product,
+                defaults={"category": category},
+            )
+
+            if created:
+                messages.success(
+                    request,
+                    f"Detalhes do produto {product.name} associados à categoria {category_name}.",
+                )
+            else:
+                messages.info(
+                    request,
+                    f"Detalhes do produto {product.name} atualizado para a categoria {category_name}.",
+                )
+
+        return redirect("upload_csv")
+
+    return render(request, "products/upload_csv.html")
