@@ -1,9 +1,18 @@
+from django.contrib.auth.decorators import user_passes_test
 from django.db.models import Q
 from django.shortcuts import get_object_or_404, render
 
 from .models import Product
 
 
+def is_in_group(group_name):
+    def check(user):
+        return user.is_authenticated and user.groups.filter(name=group_name).exists()
+
+    return check
+
+
+@user_passes_test(is_in_group("grupo"), login_url="admin:login")
 def product_list(request):
     query = request.GET.get("q", "")
     products = Product.objects.select_related("specification").all()
