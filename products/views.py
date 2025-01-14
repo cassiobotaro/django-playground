@@ -5,7 +5,14 @@ from django.contrib.auth.decorators import user_passes_test
 from django.db.models import Q
 from django.shortcuts import get_object_or_404, redirect, render
 
-from .models import Category, Product, ProductDetail
+from .models import (
+    Category,
+    Product,
+    ProductDetail,
+    ProductInfo,
+    ProductSpecification,
+    ProductTrack,
+)
 
 
 def is_in_group(group_name):
@@ -90,3 +97,30 @@ def upload_csv(request):
         return redirect("upload_csv")
 
     return render(request, "products/upload_csv.html")
+
+
+def product_track(request, product_id):
+    product = get_object_or_404(Product, pk=product_id)
+
+    product_track, created = ProductTrack.objects.get_or_create(
+        product=product,
+        defaults={"flag": ProductInfo.NONE},  # Inicializa com a flag NONE, se criado
+    )
+
+    if created:
+        has_specifications = ProductSpecification.objects.filter(
+            product=product
+        ).exists()
+        has_details = ProductDetail.objects.filter(product=product).exists()
+
+        if has_specifications:
+            product_track.flag_as(ProductInfo.HAS_SPECIFICATION)
+        if has_details:
+            product_track.flag_as(ProductInfo.HAS_DETAIL)
+
+    # Passa o objeto para o template
+    return render(
+        request,
+        "products/product_track.html",
+        {"product_track": product_track},
+    )

@@ -1,3 +1,5 @@
+from enum import IntFlag, auto
+
 from django.db import models
 
 
@@ -22,6 +24,33 @@ class Product(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class ProductInfo(IntFlag):
+    NONE = 0
+    HAS_SPECIFICATION = auto()
+    HAS_DETAIL = auto()
+    ALL_INFO = HAS_SPECIFICATION | HAS_DETAIL
+
+
+class ProductTrack(models.Model):
+    product = models.ForeignKey(
+        Product,
+        on_delete=models.CASCADE,
+        related_name="track",
+        verbose_name="Produto",
+    )
+    flag = models.IntegerField(default=ProductInfo.NONE.value)
+
+    def __str__(self):
+        return f"Rastreamento de {self.product.name}"
+
+    def flag_as(self, flag):
+        self.flag |= flag
+        self.save()
+
+    def is_complete(self):
+        return self.flag == ProductInfo.ALL_INFO
 
 
 class ProductSpecification(models.Model):
