@@ -1,6 +1,6 @@
 # django-playground
 
-A place to play and have fun
+🛝 A place to play and have fun.
 
 ## Requirements
 
