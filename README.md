@@ -2,6 +2,22 @@
 
 A place to play and have fun
 
+## Requirements
+
+[uv](https://docs.astral.sh/uv/)
+
+## Installation
+
+```bash
+uv python install 3.13
+uv python pin 3.13
+uv install
+pre-commit install
+uv run ./manage.py migrate
+uv run ./manage.py loaddata ./all_data.json
+uv run ./manage.py runserver
+```
+
 | User         | Password  | admin | grupo |
 | ------------ | --------- | ----- | ----- |
 | cassiobotaro | user@1234 | yes   | no    |

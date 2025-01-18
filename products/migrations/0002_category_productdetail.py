@@ -5,7 +5,6 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ('products', '0001_initial'),
     ]
@@ -14,20 +13,68 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Category',
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=100, verbose_name='Nome da Categoria')),
+                (
+                    'id',
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name='ID',
+                    ),
+                ),
+                (
+                    'name',
+                    models.CharField(max_length=100, verbose_name='Nome da Categoria'),
+                ),
                 ('description', models.TextField(blank=True, verbose_name='Descrição')),
             ],
         ),
         migrations.CreateModel(
             name='ProductDetail',
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('manufacturer', models.CharField(max_length=100, verbose_name='Fabricante')),
-                ('model_number', models.CharField(blank=True, max_length=50, verbose_name='Número do Modelo')),
-                ('release_date', models.DateField(blank=True, null=True, verbose_name='Data de Lançamento')),
-                ('category', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, related_name='products', to='products.category', verbose_name='Categoria')),
-                ('product', models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, related_name='detail', to='products.product', verbose_name='Produto')),
+                (
+                    'id',
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name='ID',
+                    ),
+                ),
+                (
+                    'manufacturer',
+                    models.CharField(max_length=100, verbose_name='Fabricante'),
+                ),
+                (
+                    'model_number',
+                    models.CharField(
+                        blank=True, max_length=50, verbose_name='Número do Modelo'
+                    ),
+                ),
+                (
+                    'release_date',
+                    models.DateField(
+                        blank=True, null=True, verbose_name='Data de Lançamento'
+                    ),
+                ),
+                (
+                    'category',
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.PROTECT,
+                        related_name='products',
+                        to='products.category',
+                        verbose_name='Categoria',
+                    ),
+                ),
+                (
+                    'product',
+                    models.OneToOneField(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name='detail',
+                        to='products.product',
+                        verbose_name='Produto',
+                    ),
+                ),
             ],
         ),
     ]

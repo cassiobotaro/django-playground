@@ -5,21 +5,43 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     initial = True
 
-    dependencies = [
-    ]
+    dependencies = []
 
     operations = [
         migrations.CreateModel(
             name='Product',
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=100, verbose_name='Nome do Produto')),
-                ('sku', models.CharField(max_length=20, unique=True, verbose_name='Código SKU')),
-                ('price', models.DecimalField(decimal_places=2, max_digits=10, verbose_name='Preço')),
-                ('is_available', models.BooleanField(default=True, verbose_name='Disponível')),
+                (
+                    'id',
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name='ID',
+                    ),
+                ),
+                (
+                    'name',
+                    models.CharField(max_length=100, verbose_name='Nome do Produto'),
+                ),
+                (
+                    'sku',
+                    models.CharField(
+                        max_length=20, unique=True, verbose_name='Código SKU'
+                    ),
+                ),
+                (
+                    'price',
+                    models.DecimalField(
+                        decimal_places=2, max_digits=10, verbose_name='Preço'
+                    ),
+                ),
+                (
+                    'is_available',
+                    models.BooleanField(default=True, verbose_name='Disponível'),
+                ),
                 ('created_at', models.DateTimeField(auto_now_add=True)),
                 ('updated_at', models.DateTimeField(auto_now=True)),
             ],
@@ -27,13 +49,56 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='ProductSpecification',
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('weight', models.DecimalField(blank=True, decimal_places=2, max_digits=5, null=True, verbose_name='Peso (kg)')),
-                ('dimensions', models.CharField(blank=True, max_length=50, verbose_name='Dimensões (LxAxP)')),
-                ('material', models.CharField(blank=True, max_length=100, verbose_name='Material')),
-                ('warranty', models.CharField(blank=True, max_length=50, verbose_name='Garantia')),
-                ('additional_info', models.TextField(blank=True, verbose_name='Informações Adicionais')),
-                ('product', models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, related_name='specification', to='products.product', verbose_name='Produto')),
+                (
+                    'id',
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name='ID',
+                    ),
+                ),
+                (
+                    'weight',
+                    models.DecimalField(
+                        blank=True,
+                        decimal_places=2,
+                        max_digits=5,
+                        null=True,
+                        verbose_name='Peso (kg)',
+                    ),
+                ),
+                (
+                    'dimensions',
+                    models.CharField(
+                        blank=True, max_length=50, verbose_name='Dimensões (LxAxP)'
+                    ),
+                ),
+                (
+                    'material',
+                    models.CharField(
+                        blank=True, max_length=100, verbose_name='Material'
+                    ),
+                ),
+                (
+                    'warranty',
+                    models.CharField(
+                        blank=True, max_length=50, verbose_name='Garantia'
+                    ),
+                ),
+                (
+                    'additional_info',
+                    models.TextField(blank=True, verbose_name='Informações Adicionais'),
+                ),
+                (
+                    'product',
+                    models.OneToOneField(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name='specification',
+                        to='products.product',
+                        verbose_name='Produto',
+                    ),
+                ),
             ],
         ),
     ]
