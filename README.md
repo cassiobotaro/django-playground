@@ -9,6 +9,7 @@
 ## Installation
 
 ```bash
+cp .env.example .env
 uv python install 3.13
 uv python pin 3.13
 uv install
