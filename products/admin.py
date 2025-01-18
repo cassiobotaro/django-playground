@@ -9,7 +9,55 @@ from .models import (
     ProductTrack,
 )
 
-admin.site.register(Product)
+
+class PriceCategoryFilter(admin.SimpleListFilter):
+    title = "Price Category"
+    parameter_name = "price_category"
+
+    def lookups(self, request, model_admin):
+        return [
+            ("cheap", "Cheap (Below $50)"),
+            ("medium", "Medium (Between $50 and $150)"),
+            ("expensive", "Expensive (Above $150)"),
+        ]
+
+    def queryset(self, request, queryset):
+        if self.value() == "cheap":
+            return queryset.filter(price__lt=50)
+        elif self.value() == "medium":
+            return queryset.filter(price__gte=50, price__lte=150)
+        elif self.value() == "expensive":
+            return queryset.filter(price__gt=150)
+
+
+@admin.register(Product)
+class ProductAdmin(admin.ModelAdmin):
+    list_display = ("name", "sku", "price", "is_available")
+    list_filter = ("is_available", PriceCategoryFilter)
+    search_fields = ("name", "sku")
+    date_hierarchy = "created_at"
+    ordering = ("name",)
+    actions = ["mark_as_available", "mark_as_unavailable"]
+
+    def mark_as_available(self, request, queryset):
+        queryset.update(is_available=True)
+
+    mark_as_available.short_description = "Marcar como disponível"
+
+    def mark_as_unavailable(self, request, queryset):
+        queryset.update(is_available=False)
+
+    mark_as_unavailable.short_description = "Marcar como indisponível"
+
+    def price_category(self, obj):
+        if obj.price < 50:
+            return "cheap"
+        elif 50 <= obj.price <= 150:
+            return "medium"
+        else:
+            return "expensive"
+
+    price_category.short_description = "Categoria de Preço"
 
 
 class ProductDetailAdmin(admin.ModelAdmin):
