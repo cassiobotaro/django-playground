@@ -12,3 +12,11 @@ repos:
       - id: ruff
         args: [--fix]
       - id: ruff-format
+  - repo: local
+    hooks:
+      - id: check-migrations
+        name: Check django migrations
+        entry: uv run python manage.py makemigrations --check --dry-run
+        language: system
+        types: [python]
+        pass_filenames: false
