@@ -1,4 +1,6 @@
 from django.contrib import admin
+from django.http import HttpResponseRedirect
+from django.urls import path, reverse
 
 from .models import (
     Category,
@@ -38,6 +40,26 @@ class ProductAdmin(admin.ModelAdmin):
     date_hierarchy = 'created_at'
     ordering = ('name',)
     actions = ['mark_as_available', 'mark_as_unavailable']
+
+    def get_urls(self):
+        urls = super().get_urls()
+        custom_urls = [
+            path(
+                '<int:object_id>/execute-action/',
+                self.admin_site.admin_view(self.execute_action),
+                name='execute_action',
+            ),
+        ]
+        return custom_urls + urls
+
+    def execute_action(self, request, object_id):
+        product = Product.objects.get(id=object_id)
+        product.is_available = not product.is_available
+        product.save()
+        self.message_user(request, f'Action executed with success on {product.name}')
+        return HttpResponseRedirect(
+            reverse('admin:products_product_change', args=(object_id,))
+        )
 
     def mark_as_available(self, request, queryset):
         queryset.update(is_available=True)

@@ -1,0 +1,9 @@
+{% extends "admin/change_form.html" %}
+
+{% block submit_buttons_bottom %}
+    <div class="submit-row">
+        <a class="button" href="{% url 'admin:execute_action' object_id=original.id %}">Executar Ação</a>
+        <a class="button" href="{% url 'admin:execute_action' object_id=original.id %}" style="float: left; margin-left: 0;">Executar Ação</a>
+    </div>
+    {{ block.super }}
+{% endblock %}
