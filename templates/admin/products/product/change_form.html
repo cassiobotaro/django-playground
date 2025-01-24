@@ -1,9 +1,15 @@
 {% extends "admin/change_form.html" %}
 
 {% block submit_buttons_bottom %}
+   {% if original.detail and not original.is_available %}
     <div class="submit-row">
-        <a class="button" href="{% url 'admin:execute_action' object_id=original.id %}">Executar Ação</a>
-        <a class="button" href="{% url 'admin:execute_action' object_id=original.id %}" style="float: left; margin-left: 0;">Executar Ação</a>
+        <a class="button" href="{% url 'admin:confirm_make_available' object_id=original.id %}">Tornar disponível</a>
     </div>
-    {{ block.super }}
+  {% elif original.detail and original.is_available %}
+    <div class="submit-row">
+        <a class="button" href="{% url 'admin:make_unavailable' object_id=original.id %}">Tornar indisponível</a>
+    </div>
+  {% endif %}
+  {{ block.super }}
+
 {% endblock %}

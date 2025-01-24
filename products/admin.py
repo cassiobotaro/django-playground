@@ -1,5 +1,6 @@
-from django.contrib import admin
+from django.contrib import admin, messages
 from django.http import HttpResponseRedirect
+from django.shortcuts import render
 from django.urls import path, reverse
 
 from .models import (
@@ -45,21 +46,63 @@ class ProductAdmin(admin.ModelAdmin):
         urls = super().get_urls()
         custom_urls = [
             path(
-                '<int:object_id>/execute-action/',
-                self.admin_site.admin_view(self.execute_action),
-                name='execute_action',
+                '<int:object_id>/make-available/',
+                self.admin_site.admin_view(self.make_available),
+                name='make_available',
+            ),
+            path(
+                '<int:object_id>/make-unavailable/',
+                self.admin_site.admin_view(self.make_unavailable),
+                name='make_unavailable',
+            ),
+            path(
+                '<int:object_id>/make-available/confirmation',
+                self.admin_site.admin_view(self.confirm_make_available),
+                name='confirm_make_available',
             ),
         ]
         return custom_urls + urls
 
-    def execute_action(self, request, object_id):
+    def confirm_make_available(self, request, object_id):
         product = Product.objects.get(id=object_id)
-        product.is_available = not product.is_available
-        product.save()
-        self.message_user(request, f'Action executed with success on {product.name}')
-        return HttpResponseRedirect(
-            reverse('admin:products_product_change', args=(object_id,))
+        # poderia ter verificação de permissão aqui
+
+        if product.is_available:
+            self.message_user(
+                request, f'{product.name} is already available', level=messages.WARNING
+            )
+            return HttpResponseRedirect(reverse('admin:products_product_changelist'))
+        if request.method == 'POST':
+            product.is_available = True
+            product.save()
+            self.message_user(request, f'{product.name} now is available.')
+            return HttpResponseRedirect(reverse('admin:products_product_changelist'))
+
+        return render(
+            request,
+            'admin/products/product/confirm_make_available.html',
+            {
+                **admin.site.each_context(request),
+                'opts': self.model._meta,
+                'product': product,
+            },
         )
+
+    def make_available(self, request, object_id):
+        product = Product.objects.get(id=object_id)
+        if not product.is_available:
+            product.is_available = True
+            product.save()
+        self.message_user(request, f'{product.name} now is available.')
+        return HttpResponseRedirect(reverse('admin:products_product_changelist'))
+
+    def make_unavailable(self, request, object_id):
+        product = Product.objects.get(id=object_id)
+        if product.is_available:
+            product.is_available = False
+            product.save()
+        self.message_user(request, f'{product.name} now is unavailable.')
+        return HttpResponseRedirect(reverse('admin:products_product_changelist'))
 
     def mark_as_available(self, request, queryset):
         queryset.update(is_available=True)
