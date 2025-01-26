@@ -2,6 +2,9 @@ from django.contrib import admin, messages
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import path, reverse
+from import_export import fields, resources
+from import_export.admin import ImportMixin
+from import_export.widgets import ForeignKeyWidget
 
 from .models import (
     Category,
@@ -11,6 +14,24 @@ from .models import (
     ProductSpecification,
     ProductTrack,
 )
+
+
+class ProductDetailResource(resources.ModelResource):
+    sku = fields.Field(
+        column_name='SKU',
+        attribute='product',
+        widget=ForeignKeyWidget(Product, 'sku'),
+    )
+    category = fields.Field(
+        column_name='Categoria',
+        attribute='category',
+        widget=ForeignKeyWidget(Category, 'name'),
+    )
+
+    class Meta:
+        model = ProductDetail
+        fields = ('sku', 'category')
+        import_id_fields = ['sku']
 
 
 class PriceCategoryFilter(admin.SimpleListFilter):
@@ -125,7 +146,9 @@ class ProductAdmin(admin.ModelAdmin):
     price_category.short_description = 'Categoria de Preço'
 
 
-class ProductDetailAdmin(admin.ModelAdmin):
+class ProductDetailAdmin(ImportMixin, admin.ModelAdmin):
+    resource_class = ProductDetailResource
+
     def save_model(self, request, obj, form, change):
         obj.save()
         product_track = ProductTrack.objects.filter(product=obj.product).first()

@@ -88,6 +88,8 @@ class ProductDetail(models.Model):
         on_delete=models.PROTECT,
         related_name='category',
         verbose_name='Categoria',
+        blank=True,
+        null=True,
     )
     manufacturer = models.CharField(max_length=100, verbose_name='Fabricante')
     model_number = models.CharField(
