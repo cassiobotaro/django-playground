@@ -3,6 +3,7 @@ import csv
 from django.contrib import messages
 from django.contrib.auth.decorators import user_passes_test
 from django.db.models import Q
+from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 
 from .models import (
@@ -13,6 +14,14 @@ from .models import (
     ProductSpecification,
     ProductTrack,
 )
+
+
+def trigger_task(request):
+    from .tasks import count_words
+
+    count_words.send('https://example.com/')
+    # count_words.send('https://vimbook.com.br/')
+    return HttpResponse('Task triggered!')
 
 
 def is_in_group(group_name):
