@@ -41,7 +41,24 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'products.apps.ProductsConfig',
     'import_export',
+    'django_dramatiq',
 ]
+
+DRAMATIQ_BROKER = {
+    'BROKER': 'dramatiq.brokers.rabbitmq.RabbitmqBroker',
+    'OPTIONS': {
+        'url': 'amqp://localhost:5672',
+    },
+    'MIDDLEWARE': [
+        'dramatiq.middleware.Prometheus',
+        'dramatiq.middleware.AgeLimit',
+        'dramatiq.middleware.TimeLimit',
+        'dramatiq.middleware.Callbacks',
+        'dramatiq.middleware.Retries',
+        'django_dramatiq.middleware.DbConnectionsMiddleware',
+        # "django_dramatiq.middleware.AdminMiddleware",
+    ],
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

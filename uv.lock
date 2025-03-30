@@ -97,6 +97,19 @@ wheels = [
 ]
 
 [[package]]
+name = "django-dramatiq"
+version = "0.13.0"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "django" },
+    { name = "dramatiq" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/a2/89/bb40b3287acea4e7451ee66a82a75bdeb3814252759d2e39c08c4a02a5f8/django_dramatiq-0.13.0.tar.gz", hash = "sha256:1cdf723ec6a223761985c0855b92fe40cca85d364914df6d99d3034f0f6cee15", size = 15535 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/d6/09/b19725f405621e41c119c6f4b43359c281ddd471794c215b754b8903f52c/django_dramatiq-0.13.0-py3-none-any.whl", hash = "sha256:855c590606c74bd478ad0a3a588667e3e73419e47e43ef2ae047dbebe19dff0b", size = 12376 },
+]
+
+[[package]]
 name = "django-import-export"
 version = "4.3.7"
 source = { registry = "https://pypi.org/simple" }
@@ -129,6 +142,7 @@ version = "0.1.0"
 source = { virtual = "." }
 dependencies = [
     { name = "django" },
+    { name = "django-dramatiq" },
     { name = "django-import-export" },
     { name = "django-ninja" },
     { name = "dramatiq", extra = ["rabbitmq", "watch"] },
@@ -145,6 +159,7 @@ dev = [
 [package.metadata]
 requires-dist = [
     { name = "django", specifier = ">=5.1.4" },
+    { name = "django-dramatiq", specifier = ">=0.13.0" },
     { name = "django-import-export", specifier = ">=4.3.4" },
     { name = "django-ninja", specifier = ">=1.3.0" },
     { name = "dramatiq", extras = ["rabbitmq", "watch"], specifier = ">=1.17.1" },

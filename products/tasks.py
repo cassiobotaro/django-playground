@@ -9,3 +9,8 @@ def count_words(url):
     response = httpx.get(url)
     count = len(response.text.split(' '))
     print(f'There are {count} words at {url!r}.')
+
+
+@dramatiq.actor(max_retries=3)
+def echo(message):
+    print(f'Echoing message: {message}')
