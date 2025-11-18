@@ -98,15 +98,15 @@ wheels = [
 
 [[package]]
 name = "django-dramatiq"
-version = "0.14.0"
+version = "0.15.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "django" },
     { name = "dramatiq" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/89/20/74c7225bc54495e65a3675b34ee65dfb5a4795877c715e6643474998c60d/django_dramatiq-0.14.0.tar.gz", hash = "sha256:dd957fa3c3d5106830ce90f10f72a8f07249643c5f35ccfaee1b9a79f7f5d6dd", size = 15659, upload-time = "2025-07-23T18:54:56.71Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/2b/b7/2a5ac56a5fd41fbe332221d3906168ace96df6a1f3c92d0839c4c7133cb2/django_dramatiq-0.15.0.tar.gz", hash = "sha256:e3cf1b2ac288fe4a7aa198c9450fe242ed312df8850f3f9e18ce01b8acc78b96", size = 15763, upload-time = "2025-11-13T15:53:40.115Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/11/41/fe143b92023a6ceb2ff0165d98a058479ac8e8af35cba1cf31c1b1cd4db1/django_dramatiq-0.14.0-py3-none-any.whl", hash = "sha256:78da4a5cccecf7aa099bf66a6d706269f2d0541056a4e9cdc1e54a043f38f4e1", size = 12506, upload-time = "2025-07-23T18:54:55.676Z" },
+    { url = "https://files.pythonhosted.org/packages/4a/3a/4d2e6f89ee0b9a79a271f0ead1a6c25f6cab291735493b083e316ab86130/django_dramatiq-0.15.0-py3-none-any.whl", hash = "sha256:23f0bc418a860952adbf822c4aa3b9c46c51d3d9f50be0a8ed3d19a53380df1d", size = 12620, upload-time = "2025-11-13T15:53:38.878Z" },
 ]
 
 [[package]]
